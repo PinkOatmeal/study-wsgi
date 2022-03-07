@@ -6,14 +6,14 @@ from webob import Request, Response
 
 class API:
     def __init__(self) -> None:
-        self.routes: dict[str, Callable] = {}
+        self.routes: dict[str, Callable[[Request, Response, ...], None]] = {}
 
     def __call__(self, environ, start_response):
         request = Request(environ)
         return self._handle_request(request)(environ, start_response)
 
     def _find_handler(self, request_path) \
-            -> Union[tuple[Callable[[Request, Response], None], dict[str, Any]], tuple[None, None]]:
+            -> Union[tuple[Callable[[Request, Response, ...], None], dict[str, Any]], tuple[None, None]]:
         for path, handler in self.routes.items():
             parse_result = parse(path, request_path)
             if parse_result:
