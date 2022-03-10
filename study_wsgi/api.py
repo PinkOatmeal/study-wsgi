@@ -1,9 +1,10 @@
+import inspect
 from typing import Callable, Any, Union
 
 from parse import parse
 from webob import Request, Response
 
-from study_wsgi.exceptions.routes import DuplicateRouteFound
+from study_wsgi.exceptions.routing import DuplicateRouteFound, MethodIsNotAllowed
 
 
 class API:
@@ -26,7 +27,12 @@ class API:
         response = Response()
         handler, kwargs = self._find_handler(request.path)
         if handler:
-            handler(request, response, **kwargs)
+            if inspect.isclass(handler):
+                handler = getattr(handler(), request.method.lower())
+                if not handler:
+                    raise MethodIsNotAllowed(f"{request.method} is not allowed for this route")
+
+            handler(request, response)
         else:
             response.status_code = 404
             response.text = "Not found"

@@ -1,8 +1,15 @@
 from webob import Request, Response
 
 from study_wsgi.api import API
+from study_wsgi.base.base_view import BaseView
 
 app = API()
+
+
+@app.route("/players")
+class PlayerView(BaseView):
+    def get(self, request: Request, response: Response, **kwargs):
+        pass
 
 
 @app.route("/home")
