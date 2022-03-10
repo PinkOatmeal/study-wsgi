@@ -1,0 +1,2 @@
+class DuplicateRouteFound(Exception):
+    pass

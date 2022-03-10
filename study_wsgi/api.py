@@ -3,6 +3,8 @@ from typing import Callable, Optional, Any, Union, Tuple
 
 from webob import Request, Response
 
+from study_wsgi.exceptions.routes import DuplicateRouteFound
+
 
 class API:
     def __init__(self) -> None:
@@ -32,6 +34,8 @@ class API:
 
     def route(self, path):
         def wrapper(handler):
+            if _handler := self.routes.get(path):
+                raise DuplicateRouteFound(f"Route {path} is already handled by {_handler.__name__}")
             self.routes[path] = handler
             return handler
 
