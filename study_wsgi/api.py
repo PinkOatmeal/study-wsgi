@@ -1,6 +1,6 @@
-from parse import parse, Result, Match
-from typing import Callable, Optional, Any, Union, Tuple
+from typing import Callable, Any, Union
 
+from parse import parse
 from webob import Request, Response
 
 from study_wsgi.exceptions.routes import DuplicateRouteFound
